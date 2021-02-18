@@ -62,8 +62,8 @@ License: You must have a valid license purchased only from themeforest(the above
                             <a href="">Forgot Password?</a> 
                         </div>
                         <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
-                            <button class="button button--lg w-full xl:w-32 text-white bg-theme-1 xl:mr-3 align-top">Login</button>
-                            <button class="button button--lg w-full xl:w-32 text-gray-700 border border-gray-300 dark:border-dark-5 dark:text-gray-300 mt-3 xl:mt-0 align-top">Sign up</button>
+                            <a class="button button--lg w-full xl:w-32 text-white bg-theme-1 xl:mr-3 align-top">Login</a>
+                            <a class="button button--lg w-full xl:w-32 text-gray-700 border border-gray-300 dark:border-dark-5 dark:text-gray-300 mt-3 xl:mt-0 align-top" href="pages/register.php">Sign up</a>
                         </div>
                         <div class="intro-x mt-10 xl:mt-24 text-gray-700 dark:text-gray-600 text-center xl:text-left">
                             By signin up, you agree to our 
