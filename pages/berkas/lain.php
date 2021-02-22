@@ -1168,8 +1168,8 @@ License: You must have a valid license purchased only from themeforest(the above
                             <a href="/pages/berkas/gambar.php" class="flex items-center px-3 py-2 rounded-md"> <i class="w-4 h-4 mr-2" data-feather="image"></i> Gambar </a>
                             <a href="/pages/berkas/video.php" class="flex items-center px-3 py-2 mt-2 rounded-md"> <i class="w-4 h-4 mr-2" data-feather="video"></i> Videos </a>
                             <a href="/pages/berkas/dokumen.php" class="flex items-center px-3 py-2 mt-2 rounded-md"> <i class="w-4 h-4 mr-2" data-feather="file"></i> Dokumen </a>
-                            <a href="/pages/berkas/audio.php" class="flex items-center px-3 py-2 mt-2 rounded-md bg-theme-1 text-white font-medium"> <i class="w-4 h-4 mr-2" data-feather="message-square"></i> Audio </a>
-                            <a href="/pages/berkas/lain.php" class="flex items-center px-3 py-2 mt-2 rounded-md"> <i class="w-4 h-4 mr-2" data-feather="box"></i> Lain - lain </a>
+                            <a href="/pages/berkas/audio.php" class="flex items-center px-3 py-2 mt-2 rounded-md"> <i class="w-4 h-4 mr-2" data-feather="message-square"></i> Audio </a>
+                            <a href="/pages/berkas/lain.php" class="flex items-center px-3 py-2 mt-2 rounded-md bg-theme-1 text-white font-medium"> <i class="w-4 h-4 mr-2" data-feather="box"></i> Lain - lain </a>
                         </div>
                         <div class="border-t border-gray-200 dark:border-dark-5 mt-5 pt-5">
                             <a href="" class="flex items-center px-3 py-2 rounded-md">
