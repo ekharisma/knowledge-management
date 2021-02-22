@@ -106,4 +106,3 @@ var grafikDokumenPerDivisi = new Chart(DokumenPerDivisi, {
         }
     }
 });
-

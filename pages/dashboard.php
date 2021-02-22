@@ -34,6 +34,21 @@ AND tb_pengguna.id_pengguna = tb_berkas.id_pengguna
 GROUP BY divisi";
 $result = $mysqli->query($sql);
 $dokumenPerdivisi = $converter->toJson($result);
+//last upload
+$sql = "SELECT tb_berkas.nama, tb_berkas.tanggal, tb_berkas.jam, tb_berkas.id_jenis, tb_berkas.id_pengguna, tb_divisi.id_divisi, tb_pengguna.id_divisi, tb_pengguna.id_pengguna 
+FROM tb_berkas 
+INNER JOIN tb_jenis, tb_pengguna, tb_divisi 
+WHERE (tb_berkas.id_jenis = tb_jenis.id_jenis) 
+AND (tb_berkas.id_pengguna = tb_pengguna.id_pengguna) 
+AND (tb_pengguna.id_divisi = tb_divisi.id_divisi)
+ORDER BY CONCAT(tb_berkas.tanggal, tb_berkas.jam) DESC LIMIT 5";
+$lastUpload = $mysqli->query($sql);
+//most viewed
+$sql = "SELECT tb_berkas.nama, tb_berkas.view, tb_berkas.id_jenis, tb_berkas.id_pengguna, tb_divisi.id_divisi, tb_pengguna.id_pengguna, tb_pengguna.id_divisi FROM tb_berkas INNER JOIN tb_jenis, tb_pengguna, tb_divisi WHERE view > 5 AND (tb_berkas.id_jenis = tb_jenis.id_jenis) AND (tb_berkas.id_pengguna = tb_pengguna.id_pengguna) AND (tb_pengguna.id_divisi = tb_divisi.id_divisi) ORDER BY view DESC LIMIT 5";
+$mostViewed = $mysqli->query($sql);
+//daftar dokumen
+$sql = "SELECT count(*) as jumlah, tanggal,deskripsi, tb_divisi.divisi, tb_direktorat.direktorat FROM tb_berkas JOIN tb_jenis ON tb_berkas.id_jenis = tb_jenis.id_jenis JOIN tb_pengguna ON tb_berkas.id_pengguna = tb_pengguna.id_pengguna JOIN tb_divisi ON tb_pengguna.id_divisi = tb_divisi.id_divisi JOIN tb_direktorat ON tb_pengguna.id_direktorat = tb_direktorat.id_direktorat GROUP BY tb_divisi.divisi ORDER BY jumlah DESC ";
+$documentList = $mysqli->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -1277,178 +1292,54 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <p>Last Upload</p>
                             </h2>
                         </div>
-                        <div class="mt-5">
-                            <div class="intro-y">
-                                <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
-                                    <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-15.jpg">
+                        <div id="lastUpload" class="mt-5">
+                            <?php foreach ($lastUpload as $row) : ?>
+                                <div class="intro-y">
+                                    <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
+                                        <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
+                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-15.jpg">
+                                        </div>
+                                        <div class="ml-4 mr-auto">
+                                            <div class="font-medium"><?= $row['nama'] ?></div>
+                                            <div class="text-gray-600 text-xs"><?= $row['tanggal'] ?></div>
+                                        </div>
+                                        <div class="py-1 px-2 rounded-full text-xs bg-theme-9 text-white cursor-pointer font-medium"><?= $row['jam'] ?></div>
                                     </div>
-                                    <div class="ml-4 mr-auto">
-                                        <div class="font-medium">Brad Pitt</div>
-                                        <div class="text-gray-600 text-xs">23 March 2021</div>
-                                    </div>
-                                    <div class="py-1 px-2 rounded-full text-xs bg-theme-9 text-white cursor-pointer font-medium">137 Sales</div>
                                 </div>
-                            </div>
-                            <div class="intro-y">
-                                <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
-                                    <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-10.jpg">
-                                    </div>
-                                    <div class="ml-4 mr-auto">
-                                        <div class="font-medium">Brad Pitt</div>
-                                        <div class="text-gray-600 text-xs">20 June 2020</div>
-                                    </div>
-                                    <div class="py-1 px-2 rounded-full text-xs bg-theme-9 text-white cursor-pointer font-medium">137 Sales</div>
-                                </div>
-                            </div>
-                            <div class="intro-y">
-                                <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
-                                    <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-13.jpg">
-                                    </div>
-                                    <div class="ml-4 mr-auto">
-                                        <div class="font-medium">Angelina Jolie</div>
-                                        <div class="text-gray-600 text-xs">27 June 2021</div>
-                                    </div>
-                                    <div class="py-1 px-2 rounded-full text-xs bg-theme-9 text-white cursor-pointer font-medium">137 Sales</div>
-                                </div>
-                            </div>
-                            <div class="intro-y">
-                                <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
-                                    <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-11.jpg">
-                                    </div>
-                                    <div class="ml-4 mr-auto">
-                                        <div class="font-medium">Kate Winslet</div>
-                                        <div class="text-gray-600 text-xs">20 April 2021</div>
-                                    </div>
-                                    <div class="py-1 px-2 rounded-full text-xs bg-theme-9 text-white cursor-pointer font-medium">137 Sales</div>
-                                </div>
-                            </div>
-                            <a href="" class="intro-y w-full block text-center rounded-md py-4 border border-dotted border-theme-15 dark:border-dark-5 text-theme-16 dark:text-gray-600">View More</a>
+                            <?php endforeach ?>
                         </div>
                     </div>
                     <!-- END: Weekly Best Sellers -->
-                                        <!-- BEGIN: Weekly Best Sellers -->
-                                        <div class="col-span-12 xl:col-span-6 mt-6">
+                    <!-- BEGIN: Weekly Best Sellers -->
+                    <div class="col-span-12 xl:col-span-6 mt-6">
                         <div class="intro-y flex items-center h-10">
                             <h2 class="text-lg font-medium truncate mr-5">
                                 <p>Most Viewed</p>
                             </h2>
                         </div>
-                        <div class="mt-5">
-                            <div class="intro-y">
-                                <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
-                                    <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-15.jpg">
+                        <div id="mostViewed" class="mt-5">
+                            <?php foreach ($mostViewed as $row) : ?>
+                                <div class="intro-y">
+                                    <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
+                                        <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
+                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-15.jpg">
+                                        </div>
+                                        <div class="ml-4 mr-auto">
+                                            <div class="font-medium"><?= $row['nama'] ?></div>
+                                            <div class="text-gray-600 text-xs"><?= $row['tanggal'] ?></div>
+                                        </div>
+                                        <div class="py-1 px-2 rounded-full text-xs bg-theme-9 text-white cursor-pointer font-medium"><?= $row['view'] ?></div>
                                     </div>
-                                    <div class="ml-4 mr-auto">
-                                        <div class="font-medium">Brad Pitt</div>
-                                        <div class="text-gray-600 text-xs">23 March 2021</div>
-                                    </div>
-                                    <div class="py-1 px-2 rounded-full text-xs bg-theme-9 text-white cursor-pointer font-medium">137 Sales</div>
                                 </div>
-                            </div>
-                            <div class="intro-y">
-                                <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
-                                    <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-10.jpg">
-                                    </div>
-                                    <div class="ml-4 mr-auto">
-                                        <div class="font-medium">Brad Pitt</div>
-                                        <div class="text-gray-600 text-xs">20 June 2020</div>
-                                    </div>
-                                    <div class="py-1 px-2 rounded-full text-xs bg-theme-9 text-white cursor-pointer font-medium">137 Sales</div>
-                                </div>
-                            </div>
-                            <div class="intro-y">
-                                <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
-                                    <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-13.jpg">
-                                    </div>
-                                    <div class="ml-4 mr-auto">
-                                        <div class="font-medium">Angelina Jolie</div>
-                                        <div class="text-gray-600 text-xs">27 June 2021</div>
-                                    </div>
-                                    <div class="py-1 px-2 rounded-full text-xs bg-theme-9 text-white cursor-pointer font-medium">137 Sales</div>
-                                </div>
-                            </div>
-                            <div class="intro-y">
-                                <div class="box px-4 py-4 mb-3 flex items-center zoom-in">
-                                    <div class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-11.jpg">
-                                    </div>
-                                    <div class="ml-4 mr-auto">
-                                        <div class="font-medium">Kate Winslet</div>
-                                        <div class="text-gray-600 text-xs">20 April 2021</div>
-                                    </div>
-                                    <div class="py-1 px-2 rounded-full text-xs bg-theme-9 text-white cursor-pointer font-medium">137 Sales</div>
-                                </div>
-                            </div>
-                            <a href="" class="intro-y w-full block text-center rounded-md py-4 border border-dotted border-theme-15 dark:border-dark-5 text-theme-16 dark:text-gray-600">View More</a>
+                            <?php endforeach ?>
                         </div>
                     </div>
                     <!-- END: Weekly Best Sellers -->
-                    <!-- BEGIN: General Report -->
-                    <div class="col-span-12 grid grid-cols-12 gap-6 mt-8">
-                        <div class="col-span-12 sm:col-span-6 xxl:col-span-3 intro-y">
-                            <div class="mini-report-chart box p-5 zoom-in">
-                                <div class="flex items-center">
-                                    <div class="w-2/4 flex-none">
-                                        <div class="text-lg font-medium truncate">Target Sales</div>
-                                        <div class="text-gray-600 mt-1">300 Sales</div>
-                                    </div>
-                                    <div class="flex-none ml-auto relative">
-                                        <canvas id="report-donut-chart-1" width="90" height="90"></canvas>
-                                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">20%</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-span-12 sm:col-span-6 xxl:col-span-3 intro-y">
-                            <div class="mini-report-chart box p-5 zoom-in">
-                                <div class="flex">
-                                    <div class="text-lg font-medium truncate mr-3">Social Media</div>
-                                    <div class="py-1 px-2 rounded-full text-xs bg-gray-200 dark:bg-dark-5 text-gray-600 dark:text-gray-300 cursor-pointer ml-auto truncate">320 Followers</div>
-                                </div>
-                                <div class="mt-4">
-                                    <canvas class="simple-line-chart-1 -ml-1" height="60"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-span-12 sm:col-span-6 xxl:col-span-3 intro-y">
-                            <div class="mini-report-chart box p-5 zoom-in">
-                                <div class="flex items-center">
-                                    <div class="w-2/4 flex-none">
-                                        <div class="text-lg font-medium truncate">New Products</div>
-                                        <div class="text-gray-600 mt-1">1450 Products</div>
-                                    </div>
-                                    <div class="flex-none ml-auto relative">
-                                        <canvas id="report-donut-chart-2" width="90" height="90"></canvas>
-                                        <div class="font-medium absolute w-full h-full flex items-center justify-center top-0 left-0">45%</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-span-12 sm:col-span-6 xxl:col-span-3 intro-y">
-                            <div class="mini-report-chart box p-5 zoom-in">
-                                <div class="flex">
-                                    <div class="text-lg font-medium truncate mr-3">Posted Ads</div>
-                                    <div class="py-1 px-2 rounded-full text-xs bg-gray-200 dark:bg-dark-5 text-gray-600 dark:text-gray-300 cursor-pointer ml-auto truncate">180 Campaign</div>
-                                </div>
-                                <div class="mt-4">
-                                    <canvas class="simple-line-chart-1 -ml-1" height="60"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END: General Report -->
                     <!-- BEGIN: Weekly Top Products -->
                     <div class="col-span-12 mt-6">
                         <div class="intro-y block sm:flex items-center h-10">
                             <h2 class="text-lg font-medium truncate mr-5">
-                                Weekly Top Products
+                                <p>Daftar Dokumen</p>
                             </h2>
                             <div class="flex items-center sm:ml-auto mt-3 sm:mt-0">
                                 <button class="button box flex items-center text-gray-700 dark:text-gray-300"> <i data-feather="file-text" class="hidden sm:block w-4 h-4 mr-2"></i> Export to Excel </button>
@@ -1459,130 +1350,38 @@ License: You must have a valid license purchased only from themeforest(the above
                             <table class="table table-report sm:mt-2">
                                 <thead>
                                     <tr>
-                                        <th class="whitespace-no-wrap">IMAGES</th>
-                                        <th class="whitespace-no-wrap">PRODUCT NAME</th>
-                                        <th class="text-center whitespace-no-wrap">STOCK</th>
-                                        <th class="text-center whitespace-no-wrap">STATUS</th>
-                                        <th class="text-center whitespace-no-wrap">ACTIONS</th>
+                                        <th class="whitespace-no-wrap">#</th>
+                                        <th class="whitespace-no-wrap">Nama Dokumen</th>
+                                        <th class="text-center whitespace-no-wrap">Tanggal Upload</th>
+                                        <th class="text-center whitespace-no-wrap">Deskripsi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="intro-x">
-                                        <td class="w-40">
-                                            <div class="flex">
-                                                <div class="w-10 h-10 image-fit zoom-in">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-2.jpg" title="Uploaded at 23 March 2021">
+                                    <?php foreach ($documentList as $document) : ?>
+                                        <tr class="intro-x">
+                                            <td class="w-40">
+                                                <div class="flex">
+                                                    <div class="w-10 h-10 image-fit zoom-in">
+                                                        <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-2.jpg" title="Uploaded at 23 March 2021">
+                                                    </div>
+                                                    <div class="w-10 h-10 image-fit zoom-in -ml-5">
+                                                        <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-14.jpg" title="Uploaded at 14 September 2020">
+                                                    </div>
+                                                    <div class="w-10 h-10 image-fit zoom-in -ml-5">
+                                                        <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-14.jpg" title="Uploaded at 7 May 2022">
+                                                    </div>
                                                 </div>
-                                                <div class="w-10 h-10 image-fit zoom-in -ml-5">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-14.jpg" title="Uploaded at 14 September 2020">
-                                                </div>
-                                                <div class="w-10 h-10 image-fit zoom-in -ml-5">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-14.jpg" title="Uploaded at 7 May 2022">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a href="" class="font-medium whitespace-no-wrap">Dell XPS 13</a>
-                                            <div class="text-gray-600 text-xs whitespace-no-wrap">PC &amp; Laptop</div>
-                                        </td>
-                                        <td class="text-center">88</td>
-                                        <td class="w-40">
-                                            <div class="flex items-center justify-center text-theme-9"> <i data-feather="check-square" class="w-4 h-4 mr-2"></i> Active </div>
-                                        </td>
-                                        <td class="table-report__action w-56">
-                                            <div class="flex justify-center items-center">
-                                                <a class="flex items-center mr-3" href=""> <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Edit </a>
-                                                <a class="flex items-center text-theme-6" href=""> <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="intro-x">
-                                        <td class="w-40">
-                                            <div class="flex">
-                                                <div class="w-10 h-10 image-fit zoom-in">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-5.jpg" title="Uploaded at 20 June 2020">
-                                                </div>
-                                                <div class="w-10 h-10 image-fit zoom-in -ml-5">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-9.jpg" title="Uploaded at 1 August 2020">
-                                                </div>
-                                                <div class="w-10 h-10 image-fit zoom-in -ml-5">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-10.jpg" title="Uploaded at 5 January 2022">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a href="" class="font-medium whitespace-no-wrap">Sony A7 III</a>
-                                            <div class="text-gray-600 text-xs whitespace-no-wrap">Photography</div>
-                                        </td>
-                                        <td class="text-center">50</td>
-                                        <td class="w-40">
-                                            <div class="flex items-center justify-center text-theme-9"> <i data-feather="check-square" class="w-4 h-4 mr-2"></i> Active </div>
-                                        </td>
-                                        <td class="table-report__action w-56">
-                                            <div class="flex justify-center items-center">
-                                                <a class="flex items-center mr-3" href=""> <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Edit </a>
-                                                <a class="flex items-center text-theme-6" href=""> <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="intro-x">
-                                        <td class="w-40">
-                                            <div class="flex">
-                                                <div class="w-10 h-10 image-fit zoom-in">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-12.jpg" title="Uploaded at 27 June 2021">
-                                                </div>
-                                                <div class="w-10 h-10 image-fit zoom-in -ml-5">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-10.jpg" title="Uploaded at 15 August 2021">
-                                                </div>
-                                                <div class="w-10 h-10 image-fit zoom-in -ml-5">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-10.jpg" title="Uploaded at 13 May 2022">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a href="" class="font-medium whitespace-no-wrap">Nikon Z6</a>
-                                            <div class="text-gray-600 text-xs whitespace-no-wrap">Photography</div>
-                                        </td>
-                                        <td class="text-center">72</td>
-                                        <td class="w-40">
-                                            <div class="flex items-center justify-center text-theme-6"> <i data-feather="check-square" class="w-4 h-4 mr-2"></i> Inactive </div>
-                                        </td>
-                                        <td class="table-report__action w-56">
-                                            <div class="flex justify-center items-center">
-                                                <a class="flex items-center mr-3" href=""> <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Edit </a>
-                                                <a class="flex items-center text-theme-6" href=""> <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="intro-x">
-                                        <td class="w-40">
-                                            <div class="flex">
-                                                <div class="w-10 h-10 image-fit zoom-in">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-5.jpg" title="Uploaded at 20 April 2021">
-                                                </div>
-                                                <div class="w-10 h-10 image-fit zoom-in -ml-5">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-8.jpg" title="Uploaded at 26 May 2020">
-                                                </div>
-                                                <div class="w-10 h-10 image-fit zoom-in -ml-5">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="tooltip rounded-full" src="../dist/images/preview-10.jpg" title="Uploaded at 9 September 2022">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a href="" class="font-medium whitespace-no-wrap">Nike Tanjun</a>
-                                            <div class="text-gray-600 text-xs whitespace-no-wrap">Sport &amp; Outdoor</div>
-                                        </td>
-                                        <td class="text-center">50</td>
-                                        <td class="w-40">
-                                            <div class="flex items-center justify-center text-theme-6"> <i data-feather="check-square" class="w-4 h-4 mr-2"></i> Inactive </div>
-                                        </td>
-                                        <td class="table-report__action w-56">
-                                            <div class="flex justify-center items-center">
-                                                <a class="flex items-center mr-3" href=""> <i data-feather="check-square" class="w-4 h-4 mr-1"></i> Edit </a>
-                                                <a class="flex items-center text-theme-6" href=""> <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Delete </a>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td>
+                                                <a href="" class="font-medium whitespace-no-wrap"><?= $document['divisi'] ?></a>
+                                                <div class="text-gray-600 text-xs whitespace-no-wrap"><?= $document['direktorat'] ?></div>
+                                            </td>
+                                            <td class="text-center"><?= $document['tanggal'] ?></td>
+                                            <td class="w-40">
+                                                <div class="flex items-center justify-center text-theme-9"> <i data-feather="check-square" class="w-4 h-4 mr-2"></i> <?= $document['deskripsi'] ?> </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach ?>
                                 </tbody>
                             </table>
                         </div>
@@ -1616,300 +1415,6 @@ License: You must have a valid license purchased only from themeforest(the above
                     </div>
                     <!-- END: Weekly Top Products -->
                 </div>
-                <div class="col-span-12 xxl:col-span-3 xxl:border-l border-theme-5 -mb-10 pb-10">
-                    <div class="xxl:pl-6 grid grid-cols-12 gap-6">
-                        <!-- BEGIN: Transactions -->
-                        <div class="col-span-12 md:col-span-6 xl:col-span-4 xxl:col-span-12 mt-3 xxl:mt-8">
-                            <div class="intro-x flex items-center h-10">
-                                <h2 class="text-lg font-medium truncate mr-5">
-                                    Transactions
-                                </h2>
-                            </div>
-                            <div class="mt-5">
-                                <div class="intro-x">
-                                    <div class="box px-5 py-3 mb-3 flex items-center zoom-in">
-                                        <div class="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
-                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-15.jpg">
-                                        </div>
-                                        <div class="ml-4 mr-auto">
-                                            <div class="font-medium">Brad Pitt</div>
-                                            <div class="text-gray-600 text-xs">23 March 2021</div>
-                                        </div>
-                                        <div class="text-theme-9">+$48</div>
-                                    </div>
-                                </div>
-                                <div class="intro-x">
-                                    <div class="box px-5 py-3 mb-3 flex items-center zoom-in">
-                                        <div class="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
-                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-10.jpg">
-                                        </div>
-                                        <div class="ml-4 mr-auto">
-                                            <div class="font-medium">Brad Pitt</div>
-                                            <div class="text-gray-600 text-xs">20 June 2020</div>
-                                        </div>
-                                        <div class="text-theme-9">+$190</div>
-                                    </div>
-                                </div>
-                                <div class="intro-x">
-                                    <div class="box px-5 py-3 mb-3 flex items-center zoom-in">
-                                        <div class="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
-                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-13.jpg">
-                                        </div>
-                                        <div class="ml-4 mr-auto">
-                                            <div class="font-medium">Angelina Jolie</div>
-                                            <div class="text-gray-600 text-xs">27 June 2021</div>
-                                        </div>
-                                        <div class="text-theme-6">-$120</div>
-                                    </div>
-                                </div>
-                                <div class="intro-x">
-                                    <div class="box px-5 py-3 mb-3 flex items-center zoom-in">
-                                        <div class="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
-                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-11.jpg">
-                                        </div>
-                                        <div class="ml-4 mr-auto">
-                                            <div class="font-medium">Kate Winslet</div>
-                                            <div class="text-gray-600 text-xs">20 April 2021</div>
-                                        </div>
-                                        <div class="text-theme-6">-$144</div>
-                                    </div>
-                                </div>
-                                <div class="intro-x">
-                                    <div class="box px-5 py-3 mb-3 flex items-center zoom-in">
-                                        <div class="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
-                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-7.jpg">
-                                        </div>
-                                        <div class="ml-4 mr-auto">
-                                            <div class="font-medium">Russell Crowe</div>
-                                            <div class="text-gray-600 text-xs">13 November 2020</div>
-                                        </div>
-                                        <div class="text-theme-9">+$218</div>
-                                    </div>
-                                </div>
-                                <a href="" class="intro-x w-full block text-center rounded-md py-3 border border-dotted border-theme-15 dark:border-dark-5 text-theme-16 dark:text-gray-600">View More</a>
-                            </div>
-                        </div>
-                        <!-- END: Transactions -->
-                        <!-- BEGIN: Recent Activities -->
-                        <div class="col-span-12 md:col-span-6 xl:col-span-4 xxl:col-span-12 mt-3">
-                            <div class="intro-x flex items-center h-10">
-                                <h2 class="text-lg font-medium truncate mr-5">
-                                    Recent Activities
-                                </h2>
-                                <a href="" class="ml-auto text-theme-1 dark:text-theme-10 truncate">See all</a>
-                            </div>
-                            <div class="report-timeline mt-5 relative">
-                                <div class="intro-x relative flex items-center mb-3">
-                                    <div class="report-timeline__image">
-                                        <div class="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
-                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-3.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="box px-5 py-3 ml-4 flex-1 zoom-in">
-                                        <div class="flex items-center">
-                                            <div class="font-medium">Hugh Jackman</div>
-                                            <div class="text-xs text-gray-500 ml-auto">07:00 PM</div>
-                                        </div>
-                                        <div class="text-gray-600 mt-1">Has joined the team</div>
-                                    </div>
-                                </div>
-                                <div class="intro-x relative flex items-center mb-3">
-                                    <div class="report-timeline__image">
-                                        <div class="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
-                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-3.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="box px-5 py-3 ml-4 flex-1 zoom-in">
-                                        <div class="flex items-center">
-                                            <div class="font-medium">Angelina Jolie</div>
-                                            <div class="text-xs text-gray-500 ml-auto">07:00 PM</div>
-                                        </div>
-                                        <div class="text-gray-600">
-                                            <div class="mt-1">Added 3 new photos</div>
-                                            <div class="flex mt-2">
-                                                <div class="tooltip w-8 h-8 image-fit mr-1 zoom-in" title="Dell XPS 13">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="rounded-md border border-white" src="../dist/images/preview-10.jpg">
-                                                </div>
-                                                <div class="tooltip w-8 h-8 image-fit mr-1 zoom-in" title="Sony A7 III">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="rounded-md border border-white" src="../dist/images/preview-10.jpg">
-                                                </div>
-                                                <div class="tooltip w-8 h-8 image-fit mr-1 zoom-in" title="Nikon Z6">
-                                                    <img alt="Midone Tailwind HTML Admin Template" class="rounded-md border border-white" src="../dist/images/preview-3.jpg">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="intro-x text-gray-500 text-xs text-center my-4">12 November</div>
-                                <div class="intro-x relative flex items-center mb-3">
-                                    <div class="report-timeline__image">
-                                        <div class="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
-                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-15.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="box px-5 py-3 ml-4 flex-1 zoom-in">
-                                        <div class="flex items-center">
-                                            <div class="font-medium">Al Pacino</div>
-                                            <div class="text-xs text-gray-500 ml-auto">07:00 PM</div>
-                                        </div>
-                                        <div class="text-gray-600 mt-1">Has changed <a class="text-theme-1 dark:text-theme-10" href="">Dell XPS 13</a> price and description</div>
-                                    </div>
-                                </div>
-                                <div class="intro-x relative flex items-center mb-3">
-                                    <div class="report-timeline__image">
-                                        <div class="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
-                                            <img alt="Midone Tailwind HTML Admin Template" src="../dist/images/profile-7.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="box px-5 py-3 ml-4 flex-1 zoom-in">
-                                        <div class="flex items-center">
-                                            <div class="font-medium">Johnny Depp</div>
-                                            <div class="text-xs text-gray-500 ml-auto">07:00 PM</div>
-                                        </div>
-                                        <div class="text-gray-600 mt-1">Has changed <a class="text-theme-1 dark:text-theme-10" href="">Oppo Find X2 Pro</a> description</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END: Recent Activities -->
-                        <!-- BEGIN: Important Notes -->
-                        <div class="col-span-12 md:col-span-6 xl:col-span-12 xxl:col-span-12 xl:col-start-1 xl:row-start-1 xxl:col-start-auto xxl:row-start-auto mt-3">
-                            <div class="intro-x flex items-center h-10">
-                                <h2 class="text-lg font-medium truncate mr-auto">
-                                    Important Notes
-                                </h2>
-                                <button data-carousel="important-notes" data-target="prev" class="tiny-slider-navigator button px-2 border border-gray-400 dark:border-dark-5 flex items-center text-gray-700 dark:text-gray-600 mr-2"> <i data-feather="chevron-left" class="w-4 h-4"></i> </button>
-                                <button data-carousel="important-notes" data-target="next" class="tiny-slider-navigator button px-2 border border-gray-400 dark:border-dark-5 flex items-center text-gray-700 dark:text-gray-600"> <i data-feather="chevron-right" class="w-4 h-4"></i> </button>
-                            </div>
-                            <div class="mt-5 intro-x">
-                                <div class="box zoom-in">
-                                    <div class="tiny-slider" id="important-notes">
-                                        <div class="p-5">
-                                            <div class="text-base font-medium truncate">Lorem Ipsum is simply dummy text</div>
-                                            <div class="text-gray-500 mt-1">20 Hours ago</div>
-                                            <div class="text-gray-600 text-justify mt-1">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</div>
-                                            <div class="font-medium flex mt-5">
-                                                <button type="button" class="button button--sm bg-gray-200 dark:bg-dark-5 text-gray-600 dark:text-gray-300">View Notes</button>
-                                                <button type="button" class="button button--sm border border-gray-300 dark:border-dark-5 text-gray-600 ml-auto">Dismiss</button>
-                                            </div>
-                                        </div>
-                                        <div class="p-5">
-                                            <div class="font-medium truncate">Lorem Ipsum is simply dummy text</div>
-                                            <div class="text-gray-500 mt-1">20 Hours ago</div>
-                                            <div class="text-gray-600 text-justify mt-1">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</div>
-                                            <div class="font-medium flex mt-5">
-                                                <button type="button" class="button button--sm bg-gray-200 dark:bg-dark-5 text-gray-600 dark:text-gray-300">View Notes</button>
-                                                <button type="button" class="button button--sm border border-gray-300 dark:border-dark-5 text-gray-600 ml-auto">Dismiss</button>
-                                            </div>
-                                        </div>
-                                        <div class="p-5">
-                                            <div class="font-medium truncate">Lorem Ipsum is simply dummy text</div>
-                                            <div class="text-gray-500 mt-1">20 Hours ago</div>
-                                            <div class="text-gray-600 text-justify mt-1">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</div>
-                                            <div class="font-medium flex mt-5">
-                                                <button type="button" class="button button--sm bg-gray-200 dark:bg-dark-5 text-gray-600 dark:text-gray-300">View Notes</button>
-                                                <button type="button" class="button button--sm border border-gray-300 dark:border-dark-5 text-gray-600 ml-auto">Dismiss</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END: Important Notes -->
-                        <!-- BEGIN: Schedules -->
-                        <div class="col-span-12 md:col-span-6 xl:col-span-4 xxl:col-span-12 xl:col-start-1 xl:row-start-2 xxl:col-start-auto xxl:row-start-auto mt-3">
-                            <div class="intro-x flex items-center h-10">
-                                <h2 class="text-lg font-medium truncate mr-5">
-                                    Schedules
-                                </h2>
-                                <a href="" class="ml-auto text-theme-1 dark:text-theme-10 truncate flex items-center"> <i data-feather="plus" class="w-4 h-4 mr-1"></i> Add New Schedules </a>
-                            </div>
-                            <div class="mt-5">
-                                <div class="intro-x box">
-                                    <div class="p-5">
-                                        <div class="flex">
-                                            <i data-feather="chevron-left" class="w-5 h-5 text-gray-600"></i>
-                                            <div class="font-medium mx-auto">April</div>
-                                            <i data-feather="chevron-right" class="w-5 h-5 text-gray-600"></i>
-                                        </div>
-                                        <div class="grid grid-cols-7 gap-4 mt-5 text-center">
-                                            <div class="font-medium">Su</div>
-                                            <div class="font-medium">Mo</div>
-                                            <div class="font-medium">Tu</div>
-                                            <div class="font-medium">We</div>
-                                            <div class="font-medium">Th</div>
-                                            <div class="font-medium">Fr</div>
-                                            <div class="font-medium">Sa</div>
-                                            <div class="py-1 rounded relative text-gray-600">29</div>
-                                            <div class="py-1 rounded relative text-gray-600">30</div>
-                                            <div class="py-1 rounded relative text-gray-600">31</div>
-                                            <div class="py-1 rounded relative">1</div>
-                                            <div class="py-1 rounded relative">2</div>
-                                            <div class="py-1 rounded relative">3</div>
-                                            <div class="py-1 rounded relative">4</div>
-                                            <div class="py-1 rounded relative">5</div>
-                                            <div class="py-1 bg-theme-18 dark:bg-theme-9 rounded relative">6</div>
-                                            <div class="py-1 rounded relative">7</div>
-                                            <div class="py-1 bg-theme-1 dark:bg-theme-1 text-white rounded relative">8</div>
-                                            <div class="py-1 rounded relative">9</div>
-                                            <div class="py-1 rounded relative">10</div>
-                                            <div class="py-1 rounded relative">11</div>
-                                            <div class="py-1 rounded relative">12</div>
-                                            <div class="py-1 rounded relative">13</div>
-                                            <div class="py-1 rounded relative">14</div>
-                                            <div class="py-1 rounded relative">15</div>
-                                            <div class="py-1 rounded relative">16</div>
-                                            <div class="py-1 rounded relative">17</div>
-                                            <div class="py-1 rounded relative">18</div>
-                                            <div class="py-1 rounded relative">19</div>
-                                            <div class="py-1 rounded relative">20</div>
-                                            <div class="py-1 rounded relative">21</div>
-                                            <div class="py-1 rounded relative">22</div>
-                                            <div class="py-1 bg-theme-17 dark:bg-theme-11 rounded relative">23</div>
-                                            <div class="py-1 rounded relative">24</div>
-                                            <div class="py-1 rounded relative">25</div>
-                                            <div class="py-1 rounded relative">26</div>
-                                            <div class="py-1 bg-theme-14 dark:bg-theme-12 rounded relative">27</div>
-                                            <div class="py-1 rounded relative">28</div>
-                                            <div class="py-1 rounded relative">29</div>
-                                            <div class="py-1 rounded relative">30</div>
-                                            <div class="py-1 rounded relative text-gray-600">1</div>
-                                            <div class="py-1 rounded relative text-gray-600">2</div>
-                                            <div class="py-1 rounded relative text-gray-600">3</div>
-                                            <div class="py-1 rounded relative text-gray-600">4</div>
-                                            <div class="py-1 rounded relative text-gray-600">5</div>
-                                            <div class="py-1 rounded relative text-gray-600">6</div>
-                                            <div class="py-1 rounded relative text-gray-600">7</div>
-                                            <div class="py-1 rounded relative text-gray-600">8</div>
-                                            <div class="py-1 rounded relative text-gray-600">9</div>
-                                        </div>
-                                    </div>
-                                    <div class="border-t border-gray-200 p-5">
-                                        <div class="flex items-center">
-                                            <div class="w-2 h-2 bg-theme-11 rounded-full mr-3"></div>
-                                            <span class="truncate">UI/UX Workshop</span>
-                                            <div class="h-px flex-1 border border-r border-dashed border-gray-300 mx-3 xl:hidden"></div>
-                                            <span class="font-medium xl:ml-auto">23th</span>
-                                        </div>
-                                        <div class="flex items-center mt-4">
-                                            <div class="w-2 h-2 bg-theme-1 dark:bg-theme-10 rounded-full mr-3"></div>
-                                            <span class="truncate">VueJs Frontend Development</span>
-                                            <div class="h-px flex-1 border border-r border-dashed border-gray-300 mx-3 xl:hidden"></div>
-                                            <span class="font-medium xl:ml-auto">10th</span>
-                                        </div>
-                                        <div class="flex items-center mt-4">
-                                            <div class="w-2 h-2 bg-theme-12 rounded-full mr-3"></div>
-                                            <span class="truncate">Laravel Rest API</span>
-                                            <div class="h-px flex-1 border border-r border-dashed border-gray-300 mx-3 xl:hidden"></div>
-                                            <span class="font-medium xl:ml-auto">31th</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END: Schedules -->
-                    </div>
-                </div>
             </div>
         </div>
         <!-- END: Content -->
@@ -1921,15 +1426,16 @@ License: You must have a valid license purchased only from themeforest(the above
     </div>
     <!-- END: Dark Mode Switcher-->
     <!-- BEGIN: JS Assets-->
-    <script src="../dist/js/app.js"></script>
+    <script src="../dist/js/app.js">
+    </script>
     <script>
         var berkas = <?= $berkas ?>;
         var pengguna = <?= $pengguna ?>;
         var dataPerBulan = <?= json_encode($dataPerBulan) ?>;
         var dataPerDivisi = <?= $dokumenPerdivisi ?>;
-        console.log(dataPerDivisi);
+        console.log(dataPerBulan);
     </script>
-    <script src="../dist//js//dashboard.js"></script>
+    <script src="../dist/js/dashboard.js"></script>
     <!-- END: JS Assets-->
 </body>
 
