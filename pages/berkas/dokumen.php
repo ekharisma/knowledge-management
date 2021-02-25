@@ -1,3 +1,11 @@
+<?php
+require('../../config/db_sql.php');
+$sql = "SELECT tb_berkas.id_berkas, tb_berkas.nama, tb_berkas.file, tb_berkas.deskripsi, tb_jenis.jenis FROM tb_berkas, tb_jenis, tb_pengguna WHERE tb_berkas.id_jenis = tb_jenis.id_jenis AND tb_berkas.id_pengguna = tb_pengguna.id_pengguna AND tb_jenis.id_jenis = 2 ORDER BY id_berkas DESC LIMIT 5";
+$berkas = $mysqli->query($sql);
+?>
+
+
+
 <!DOCTYPE html>
 <!--
 Template Name: Midone - HTML Admin Dashboard Template
@@ -27,6 +35,15 @@ License: You must have a valid license purchased only from themeforest(the above
 
 <body class="app">
     <!-- BEGIN: Mobile Menu -->
+    <!-- BEGIN BASE MODAL -->
+    <div class="modal" id="button-modal-preview">
+        <div class="modal__content relative"> <a data-dismiss="modal" href="javascript:;" class="absolute right-0 top-0 mt-3 mr-3"> <i data-feather="x" class="w-8 h-8 text-gray-500"></i> </a>
+            <div class="p-5 text-center"> <i class="w-16 h-16 text-theme-9 mx-auto mt-3"></i>
+            </div>
+            <div class="px-5 pb-8 text-center"> <button type="button" data-dismiss="modal" class="button w-24 bg-theme-6 text-white">Tutup</button> </div>
+        </div>
+    </div>
+    <!-- END BASE MODAL -->
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
             <a href="" class="flex mr-auto">
@@ -1171,29 +1188,6 @@ License: You must have a valid license purchased only from themeforest(the above
                             <a href="/pages/berkas/audio.php" class="flex items-center px-3 py-2 mt-2 rounded-md"> <i class="w-4 h-4 mr-2" data-feather="message-square"></i> Audio </a>
                             <a href="/pages/berkas/lain.php" class="flex items-center px-3 py-2 mt-2 rounded-md"> <i class="w-4 h-4 mr-2" data-feather="box"></i> Lain - lain </a>
                         </div>
-                        <div class="border-t border-gray-200 dark:border-dark-5 mt-5 pt-5">
-                            <a href="" class="flex items-center px-3 py-2 rounded-md">
-                                <div class="w-2 h-2 bg-theme-11 rounded-full mr-3"></div>
-                                Custom Work
-                            </a>
-                            <a href="" class="flex items-center px-3 py-2 mt-2 rounded-md">
-                                <div class="w-2 h-2 bg-theme-9 rounded-full mr-3"></div>
-                                Important Meetings
-                            </a>
-                            <a href="" class="flex items-center px-3 py-2 mt-2 rounded-md">
-                                <div class="w-2 h-2 bg-theme-12 rounded-full mr-3"></div>
-                                Work
-                            </a>
-                            <a href="" class="flex items-center px-3 py-2 mt-2 rounded-md">
-                                <div class="w-2 h-2 bg-theme-11 rounded-full mr-3"></div>
-                                Design
-                            </a>
-                            <a href="" class="flex items-center px-3 py-2 mt-2 rounded-md">
-                                <div class="w-2 h-2 bg-theme-6 rounded-full mr-3"></div>
-                                Next Week
-                            </a>
-                            <a href="" class="flex items-center px-3 py-2 mt-2 rounded-md"> <i class="w-4 h-4 mr-2" data-feather="plus"></i> Add New Label </a>
-                        </div>
                     </div>
                     <!-- END: File Manager Menu -->
                 </div>
@@ -1256,411 +1250,27 @@ License: You must have a valid license purchased only from themeforest(the above
                     <!-- END: File Manager Filter -->
                     <!-- BEGIN: Directory & Files -->
                     <div class="intro-y grid grid-cols-12 gap-3 sm:gap-6 mt-5">
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--empty-directory mx-auto"></a> <a href="" class="block font-medium mt-4 text-center truncate">Documentation</a>
-                                <div class="text-gray-600 text-xs text-center">4 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
+                        <?php foreach ($berkas as $row) : ?>
+                            <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
+                                <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
+                                    <div class="absolute left-0 top-0 mt-3 ml-3">
+                                        <input class="input border border-gray-500" type="checkbox">
+                                    </div>
+                                    <a href="" class="w-3/5 file__icon file__icon--empty-directory mx-auto"></a> <a href="" class="block font-medium mt-4 text-center truncate"><?= $row['nama'] ?></a>
+                                    <div class="text-gray-600 text-xs text-center">4 MB</div>
+                                    <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
+                                        <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
+                                        <div class="dropdown-box w-40">
+                                            <div class="dropdown-box__content box dark:bg-dark-1 p-2">
+                                                <a href="javascript:;" data-toggle="modal" data-target="#button-modal-preview" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trello" class="w-4 h-4 mr-2"></i>Detail</a>
+                                                <a href="javascript:;" data-toggle="modal" data-target="#button-modal-preview" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="box" class="w-4 h-4 mr-2"></i>Unduh</a>
+                                                <a href="javascript:;" data-toggle="modal" data-target="#button-modal-preview" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i>Hapus</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--file mx-auto">
-                                    <div class="file__icon__file-name">MP4</div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">Celine Dion - Ashes.mp4</a>
-                                <div class="text-gray-600 text-xs text-center">20 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--image mx-auto">
-                                    <div class="file__icon--image__preview image-fit">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../../dist/images/preview-11.jpg">
-                                    </div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">preview-11.jpg</a>
-                                <div class="text-gray-600 text-xs text-center">1 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--directory mx-auto"></a> <a href="" class="block font-medium mt-4 text-center truncate">Repository</a>
-                                <div class="text-gray-600 text-xs text-center">20 KB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--image mx-auto">
-                                    <div class="file__icon--image__preview image-fit">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../../dist/images/preview-11.jpg">
-                                    </div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">preview-11.jpg</a>
-                                <div class="text-gray-600 text-xs text-center">1 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--file mx-auto">
-                                    <div class="file__icon__file-name">MP4</div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">Celine Dion - Ashes.mp4</a>
-                                <div class="text-gray-600 text-xs text-center">20 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--image mx-auto">
-                                    <div class="file__icon--image__preview image-fit">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../../dist/images/preview-9.jpg">
-                                    </div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">preview-9.jpg</a>
-                                <div class="text-gray-600 text-xs text-center">1 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--empty-directory mx-auto"></a> <a href="" class="block font-medium mt-4 text-center truncate">Laravel 7</a>
-                                <div class="text-gray-600 text-xs text-center">120 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--directory mx-auto"></a> <a href="" class="block font-medium mt-4 text-center truncate">Dota 2</a>
-                                <div class="text-gray-600 text-xs text-center">112 GB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--file mx-auto">
-                                    <div class="file__icon__file-name">TXT</div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">Resources.txt</a>
-                                <div class="text-gray-600 text-xs text-center">2.2 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--empty-directory mx-auto"></a> <a href="" class="block font-medium mt-4 text-center truncate">Documentation</a>
-                                <div class="text-gray-600 text-xs text-center">4 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--image mx-auto">
-                                    <div class="file__icon--image__preview image-fit">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../../dist/images/preview-5.jpg">
-                                    </div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">preview-5.jpg</a>
-                                <div class="text-gray-600 text-xs text-center">1.2 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--empty-directory mx-auto"></a> <a href="" class="block font-medium mt-4 text-center truncate">Documentation</a>
-                                <div class="text-gray-600 text-xs text-center">4 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--image mx-auto">
-                                    <div class="file__icon--image__preview image-fit">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../../dist/images/preview-13.jpg">
-                                    </div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">preview-13.jpg</a>
-                                <div class="text-gray-600 text-xs text-center">1.4 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--image mx-auto">
-                                    <div class="file__icon--image__preview image-fit">
-                                        <img alt="Midone Tailwind HTML Admin Template" src="../../dist/images/preview-1.jpg">
-                                    </div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">preview-1.jpg</a>
-                                <div class="text-gray-600 text-xs text-center">1 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--directory mx-auto"></a> <a href="" class="block font-medium mt-4 text-center truncate">Repository</a>
-                                <div class="text-gray-600 text-xs text-center">20 KB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--directory mx-auto"></a> <a href="" class="block font-medium mt-4 text-center truncate">Repository</a>
-                                <div class="text-gray-600 text-xs text-center">20 KB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--file mx-auto">
-                                    <div class="file__icon__file-name">MP4</div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">Celine Dion - Ashes.mp4</a>
-                                <div class="text-gray-600 text-xs text-center">20 MB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--directory mx-auto"></a> <a href="" class="block font-medium mt-4 text-center truncate">Repository</a>
-                                <div class="text-gray-600 text-xs text-center">20 KB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="intro-y col-span-6 sm:col-span-4 md:col-span-3 xxl:col-span-2">
-                            <div class="file box rounded-md px-5 pt-8 pb-5 px-3 sm:px-5 relative zoom-in">
-                                <div class="absolute left-0 top-0 mt-3 ml-3">
-                                    <input class="input border border-gray-500" type="checkbox">
-                                </div>
-                                <a href="" class="w-3/5 file__icon file__icon--file mx-auto">
-                                    <div class="file__icon__file-name">PHP</div>
-                                </a>
-                                <a href="" class="block font-medium mt-4 text-center truncate">Routes.php</a>
-                                <div class="text-gray-600 text-xs text-center">1 KB</div>
-                                <div class="absolute top-0 right-0 mr-2 mt-2 dropdown ml-auto">
-                                    <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
-                                    <div class="dropdown-box w-40">
-                                        <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> Share File </a>
-                                            <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <?php endforeach ?>
                     </div>
                     <!-- END: Directory & Files -->
                     <!-- BEGIN: Pagination -->
@@ -1704,8 +1314,6 @@ License: You must have a valid license purchased only from themeforest(the above
     </div>
     <!-- END: Dark Mode Switcher-->
     <!-- BEGIN: JS Assets-->
-    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=[" your-google-map-api"]&libraries=places"></script>
     <script src="../../dist/js/app.js"></script>
     <!-- END: JS Assets-->
 </body>
