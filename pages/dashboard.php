@@ -10,6 +10,7 @@ $berkas = $converter->toJson($result);
 $sql = "SELECT * FROM tb_pengguna";
 $result = $mysqli->query($sql);
 $pengguna = $converter->toJson($result);
+//grafik dokumen per bulan
 $sql = "SELECT COUNT(*) as jumlah FROM tb_berkas WHERE tanggal LIKE ?";
 $stmt = $mysqli->prepare($sql);
 $bulan = [
