@@ -14,8 +14,6 @@ var _myChart = new Chart(_ctx5, {
             barPercentage: 0.5,
             barThickness: 15,
             maxBarThickness: 20,
-<<<<<<< HEAD
-=======
             minBarLength: 2,
             data: data,
             backgroundColor: '#3160D8'
@@ -85,7 +83,6 @@ var _myChart = new Chart(grafikDokumenPerDivisi, {
             barPercentage: 0.5,
             barThickness: 10,
             maxBarThickness: 8,
->>>>>>> from_github
             minBarLength: 2,
             data: data,
             backgroundColor: '#3160D8'
