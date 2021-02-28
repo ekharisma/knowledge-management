@@ -6,7 +6,6 @@ $berkas = $mysqli->query($sql);
 //file manager;
 $manager = new FileManager;
 $id = $_POST['id'];
-
 ?>
 
 
@@ -41,16 +40,6 @@ License: You must have a valid license purchased only from themeforest(the above
 <body class="app">
     <!-- BEGIN: Mobile Menu -->
     <!-- BEGIN VIEW MODAL -->
-    <div class="modal" id="view_modal">
-        <div class="modal__content modal__content--lg text-center p-5"> <a data-dismiss="modal" href="javascript:;" class="absolute right-0 top-0 mt-3 mr-3"> <i data-feather="x" class="w-8 h-8 text-gray-500"></i> </a>
-            <div class=container>
-                <p>View Modal</p>
-            </div>
-            <div class="px-5 pb-8 text-center mt-5"> <button type="button" data-dismiss="modal" class="button w-24 bg-theme-6 text-white">Tutup</button> </div>
-        </div>
-    </div>
-    <!-- END VIEW MODAL -->
-    <!-- BEGIN VIEW MODAL -->
     <div class="modal" id="button-modal-preview">
         <div class="modal__content modal__content--lg text-center p-5"> <a data-dismiss="modal" href="javascript:;" class="absolute right-0 top-0 mt-3 mr-3"> <i data-feather="x" class="w-8 h-8 text-gray-500"></i> </a>
             <div class=container>
@@ -59,6 +48,15 @@ License: You must have a valid license purchased only from themeforest(the above
             <div class="px-5 pb-8 text-center mt-5"> <button type="button" data-dismiss="modal" class="button w-24 bg-theme-6 text-white">Tutup</button> </div>
         </div>
     </div>
+        <div class='modal' id='delete-modal'>
+            <div class='modal__content'>
+                <div class='p-5 text-center'> <i data-feather='x-circle' class='w-16 h-16 text-theme-6 mx-auto mt-3'></i>
+                    <div class='text-3xl mt-5'>Apakah Anda Yakin?</div>
+                    <div class='text-gray-600 mt-2'>File yang telah dihapus tidak dapat dikembalikan</div>
+                </div>
+                <div class='px-5 pb-8 text-center'> <button type='button' data-dismiss='modal' class='button w-24 border text-gray-700 dark:border-dark-5 dark:text-gray-300 mr-1'>Cancel</button> <button type='button' class='button w-24 bg-theme-6 text-white hapus_btn'>Delete</button> </div>
+            </div>
+        </div>
     <!-- END VIEW MODAL -->
     <div class="mobile-menu md:hidden">
         <div class="mobile-menu-bar">
@@ -1278,10 +1276,10 @@ License: You must have a valid license purchased only from themeforest(the above
                                         <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"> <i data-feather="more-vertical" class="w-5 h-5 text-gray-500"></i> </a>
                                         <div class="dropdown-box w-40">
                                             <div class="dropdown-box__content box dark:bg-dark-1 p-2">
-                                                <a id="<?="lihat-" . $row['id_berkas'] ?>" href="javascript:;" data-toggle="modal" data-target="#view_modal" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trello" class="w-4 h-4 mr-2"></i>Lihat</a>
-                                                <a id="<?="detail-" . $row['id_berkas'] ?>" href="javascript:;" data-toggle="modal" data-target="#button-modal-preview" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trello" class="w-4 h-4 mr-2"></i>Detail</a>
-                                                <a id="<?="unduh-" .  $row['id_berkas'] ?>" href="javascript:;" data-toggle="modal" data-target="#button-modal-preview" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="box" class="w-4 h-4 mr-2"></i>Unduh</a>
-                                                <a id="<?="hapus-" . $row['id_berkas'] ?>" href="javascript:;" data-toggle="modal" data-target="#button-modal-preview" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md"> <i data-feather="trash" class="w-4 h-4 mr-2"></i>Hapus</a>
+                                                <a id="<?=$row['id_berkas'] ?>" href="javascript:;" data-toggle="modal" data-target="#button-modal-preview" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md lihat"> <i data-feather="trello" class="w-4 h-4 mr-2"></i>Lihat</a>
+                                                <a id="<?=$row['id_berkas']?>" href="javascript:;" data-toggle="modal" data-target="#button-modal-preview" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md detail"> <i data-feather="trello" class="w-4 h-4 mr-2"></i>Detail</a>
+                                                <a id="<?=$row['id_berkas']?>" href="<?="../../uploads/" . $row['file'] ?>" download data-toggle="modal" data-target="#button-modal-preview" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md unduh"> <i data-feather="box" class="w-4 h-4 mr-2"></i>Unduh</a>
+                                                <a id="<?=$row['id_berkas']?>" href="javascript:;" data-toggle="modal" data-target="#delete-modal" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md hapus"> <i data-feather="trash" class="w-4 h-4 mr-2"></i>Hapus</a>
                                             </div>
                                         </div>
                                     </div>
@@ -1332,7 +1330,8 @@ License: You must have a valid license purchased only from themeforest(the above
     <!-- END: Dark Mode Switcher-->
     <!-- BEGIN: JS Assets-->
     <script src="../../dist/js/app.js"></script>
+    <script src="../../dist/js/jquery.js"></script>
+    <script src="../../dist/js/dokumen.js"></script>
     <!-- END: JS Assets-->
 </body>
-
 </html>
